@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { motion } from "framer-motion";
 
 // React Bits "BlurText" equivalent: words blur + fade in, staggered.
@@ -15,22 +16,24 @@ export default function BlurText({
   const words = String(text).split(" ");
 
   return (
-    <Tag className={className} style={{ display: "inline-block", ...style }}>
+    <Tag className={className} style={style}>
       {words.map((word, i) => (
-        <motion.span
-          key={i}
-          style={{ display: "inline-block", willChange: "transform, filter" }}
-          initial={{ opacity: 0, filter: "blur(10px)", y: 12 }}
-          animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-          transition={{
-            duration: 0.5,
-            delay: i * delay,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          {word}
-          {i < words.length - 1 ? " " : ""}
-        </motion.span>
+        <Fragment key={i}>
+          <motion.span
+            style={{ display: "inline-block", willChange: "transform, filter" }}
+            initial={{ opacity: 0, filter: "blur(10px)", y: 12 }}
+            animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{
+              duration: 0.5,
+              delay: i * delay,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            {word}
+          </motion.span>
+          {/* real space BETWEEN inline-block spans so words don't tangle */}
+          {i < words.length - 1 ? " " : null}
+        </Fragment>
       ))}
     </Tag>
   );
