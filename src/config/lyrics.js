@@ -72,7 +72,7 @@ const RAW = [
 
 // Global timing nudge in seconds. Positive = lyrics appear LATER.
 // Tweak this one number to shift the whole song's sync.
-const OFFSET = 2;
+const OFFSET = 1;
 
 // Auto-fill each line's end with the next line's start, unless an explicit
 // end was provided as the 3rd RAW value. OFFSET is applied to everything.
