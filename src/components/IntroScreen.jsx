@@ -17,7 +17,8 @@ export default function IntroScreen({ onYes }) {
 
   return (
     <div className="screen">
-      <Orb hue={280} hoverIntensity={0.4} rotateOnHover />
+      <Orb hue={290} hoverIntensity={0.4} rotateOnHover />
+      <div className="intro-scrim" />
       <Characters />
 
       <div className="content">

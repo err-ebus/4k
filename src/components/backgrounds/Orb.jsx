@@ -57,17 +57,22 @@ export default function Orb({
           float d = length(uv);
           float t = uTime * 0.4;
 
-          // soft pulsing orb
+          // soft pulsing orb — pastel halo with a calm, dark-ish center so
+          // text placed over the middle stays readable.
           float ring = sin(d * 6.0 - t * 2.0) * 0.5 + 0.5;
-          float glow = smoothstep(1.0, 0.0, d);
-          float core = smoothstep(0.6 + uHover * 0.2, 0.0, d);
+          float glow = smoothstep(1.1, 0.15, d);
+          float halo = smoothstep(0.15, 0.62, d) * smoothstep(1.05, 0.45, d);
 
           float baseHue = uHue / 360.0;
-          vec3 col = hsv2rgb(vec3(baseHue + ring * 0.08 + d * 0.1, 0.7, 1.0));
-          col *= glow * (0.5 + ring * 0.5);
-          col += core * hsv2rgb(vec3(baseHue + 0.05, 0.4, 1.0)) * (0.6 + uHover);
+          // softer (lower saturation) pastel tone
+          vec3 col = hsv2rgb(vec3(baseHue + ring * 0.06 + d * 0.12, 0.5, 1.0));
+          col *= glow * (0.35 + ring * 0.35);
+          // brightness lives in the ring/halo, not the core
+          col += halo * hsv2rgb(vec3(baseHue + 0.04, 0.35, 1.0)) * (0.5 + uHover);
+          // dim the very center where the title sits
+          col *= 0.45 + 0.55 * smoothstep(0.0, 0.55, d);
 
-          float alpha = clamp(glow * 1.1, 0.0, 1.0);
+          float alpha = clamp(glow * 1.05, 0.0, 1.0);
           gl_FragColor = vec4(col, alpha);
         }
       `,
