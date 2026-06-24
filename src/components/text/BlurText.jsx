@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 
 // React Bits "BlurText" equivalent: words blur + fade in, staggered.
-// CSS-composited (filter + transform), cheap. Re-keys per text so each new
-// lyric line re-animates.
+// The outer element is a PLAIN tag (stable identity) and only the word spans
+// are motion components — calling motion(Tag) inside render would create a new
+// component type every render and cause remount/re-animation flicker.
+// Re-animation on a new line is driven by the `key` the parent passes.
 export default function BlurText({
   text = "",
   className = "",
@@ -11,24 +13,15 @@ export default function BlurText({
   style,
 }) {
   const words = String(text).split(" ");
-  const MotionTag = motion(Tag);
 
   return (
-    <MotionTag
-      key={text}
-      className={className}
-      style={{ display: "inline-block", ...style }}
-      initial="hidden"
-      animate="visible"
-    >
+    <Tag className={className} style={{ display: "inline-block", ...style }}>
       {words.map((word, i) => (
         <motion.span
           key={i}
           style={{ display: "inline-block", willChange: "transform, filter" }}
-          variants={{
-            hidden: { opacity: 0, filter: "blur(10px)", y: 12 },
-            visible: { opacity: 1, filter: "blur(0px)", y: 0 },
-          }}
+          initial={{ opacity: 0, filter: "blur(10px)", y: 12 }}
+          animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
           transition={{
             duration: 0.5,
             delay: i * delay,
@@ -36,9 +29,9 @@ export default function BlurText({
           }}
         >
           {word}
-          {i < words.length - 1 ? " " : ""}
+          {i < words.length - 1 ? " " : ""}
         </motion.span>
       ))}
-    </MotionTag>
+    </Tag>
   );
 }

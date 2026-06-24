@@ -13,25 +13,34 @@ const DEBUG =
 // Shows the previous + next lines dimmed around the bright current line.
 // Driven off audio.currentTime via timeupdate (~4x/sec, fine for line sync).
 export default function LyricsScreen({ audioRef }) {
-  const [t, setT] = useState(0);
+  // Only re-render when the displayed line changes — not on every timeupdate
+  // (~4x/sec) — so the active line's blur-in animation isn't restarted.
+  const [{ anchor, active }, setView] = useState({ anchor: -1, active: -1 });
 
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
-    const onTime = () => setT(a.currentTime);
+    const onTime = () => {
+      const t = a.currentTime;
+      // active = line whose [start,end) window contains t (bright)
+      const nextActive = lyrics.findIndex((l) => t >= l.start && t < l.end);
+      // anchor = last line that has started (stays put during instrumental gaps)
+      let nextAnchor = -1;
+      for (let i = 0; i < lyrics.length; i++) {
+        if (t >= lyrics[i].start) nextAnchor = i;
+        else break;
+      }
+      setView((v) =>
+        v.anchor === nextAnchor && v.active === nextActive
+          ? v
+          : { anchor: nextAnchor, active: nextActive }
+      );
+    };
     a.addEventListener("timeupdate", onTime);
     onTime();
     return () => a.removeEventListener("timeupdate", onTime);
   }, [audioRef]);
 
-  // active = line whose [start,end) window contains t (bright)
-  const active = lyrics.findIndex((l) => t >= l.start && t < l.end);
-  // anchor = last line that has started (stays put during instrumental gaps)
-  let anchor = -1;
-  for (let i = 0; i < lyrics.length; i++) {
-    if (t >= lyrics[i].start) anchor = i;
-    else break;
-  }
   const started = anchor >= 0;
   const isActive = active !== -1 && active === anchor;
 
