@@ -1,0 +1,84 @@
+:root {
+  --soft-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #1a0b2e;
+  color: #fff;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+#root {
+  position: relative;
+}
+
+/* ---- Characters idle float (section 4) ---- */
+@keyframes floaty {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+.floaty {
+  animation: floaty 3s ease-in-out infinite;
+}
+
+/* ---- shared screen layout ---- */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.overlay-dark {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 540px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floaty {
+    animation: none;
+  }
+}

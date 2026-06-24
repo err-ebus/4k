@@ -1,0 +1,97 @@
+.intro-title {
+  font-size: clamp(2rem, 9vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.trap-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 2.4rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  will-change: transform;
+  touch-action: manipulation;
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, #ff5fa2, #ff8fb1);
+  box-shadow: 0 8px 24px rgba(255, 95, 162, 0.45);
+}
+
+.btn-no {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.trap-caption {
+  margin-top: 1.5rem;
+  min-height: 1.4em;
+  font-size: 1rem;
+  opacity: 0.85;
+  font-style: italic;
+}
+
+/* near-miss sparkles float up and fade (desktop) */
+.spark {
+  position: fixed;
+  z-index: 9;
+  font-size: 1.6rem;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: spark-up 0.9s ease-out forwards;
+}
+
+@keyframes spark-up {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -180%) scale(1.2);
+  }
+}
+
+@keyframes yes-bounce {
+  0%,
+  100% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.15;
+  }
+}
+
+@keyframes no-shake {
+  0%,
+  100% {
+    margin-left: 0;
+  }
+  25% {
+    margin-left: -8px;
+  }
+  75% {
+    margin-left: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spark,
+  .btn {
+    animation: none !important;
+  }
+}
