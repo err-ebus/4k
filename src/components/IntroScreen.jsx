@@ -21,7 +21,7 @@ export default function IntroScreen({ onYes }) {
       <Characters />
 
       <div className="content">
-        <SplitText className="intro-title" text="Do you want 4K?" />
+        <SplitText className="intro-title" text="4K?" />
         <YesNoTrap onYes={handleYes} />
       </div>
     </div>

@@ -1,9 +1,37 @@
 .intro-title {
-  font-size: clamp(2rem, 9vw, 3.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: clamp(5.5rem, 30vw, 12rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
   margin-bottom: 2.5rem;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  animation: title-glow 3.2s ease-in-out infinite;
+}
+
+/* gradient fill + neon glow on each letter (SplitText renders chars as spans) */
+.intro-title span {
+  background: linear-gradient(180deg, #ffffff 0%, #ffd6ec 35%, #ff7ab8 70%, #b06bff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 2px 18px rgba(255, 110, 180, 0.55))
+    drop-shadow(0 0 40px rgba(150, 90, 255, 0.35));
+}
+
+@keyframes title-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 22px rgba(255, 110, 180, 0.45));
+  }
+  50% {
+    filter: drop-shadow(0 0 40px rgba(255, 110, 180, 0.75));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-title {
+    animation: none;
+  }
 }
 
 .trap-row {

@@ -2,7 +2,14 @@ import { useCallback, useRef, useState } from "react";
 import IntroScreen from "./components/IntroScreen.jsx";
 import LyricsScreen from "./components/LyricsScreen.jsx";
 import EndingScreen from "./components/EndingScreen.jsx";
+import { lyrics } from "./config/lyrics.js";
 import audioUrl from "./assets/audio/por-que.mp3";
+
+// Start the song at the first "Por que" chorus (skip the intro + Verse 1).
+// Derived from the lyrics so it stays correct if timings are re-synced.
+// Set to 0 to play from the very beginning instead.
+const firstChorus = lyrics.find((l) => /^por\s*que/i.test(l.text));
+const START_AT = firstChorus ? Math.max(0, firstChorus.start - 0.4) : 0;
 
 // Screen state machine (section 2). Single source of truth.
 // "intro" | "playing" | "ending"
@@ -16,7 +23,7 @@ export default function App() {
   const handleYes = useCallback(() => {
     const a = audioRef.current;
     if (a) {
-      a.currentTime = 0;
+      a.currentTime = START_AT; // start at the chorus
       a.play().catch(() => {
         /* autoplay block is unlikely here — Yes is a user gesture */
       });
