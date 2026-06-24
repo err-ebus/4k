@@ -1,4 +1,3 @@
-import BlurText from "./text/BlurText.jsx";
 import endingImg from "../assets/images/ending.gif";
 import "./ending.css";
 
@@ -9,12 +8,7 @@ export default function EndingScreen({ onRestart }) {
       <div className="content ending-content">
         <img className="ending-img" src={endingImg} alt="" />
 
-        <BlurText
-          as="h2"
-          className="ending-msg"
-          text="te amo 💗"
-        />
-        <p className="ending-sub">thanks for choosing 4K</p>
+        <p className="ending-credit">made by errebus</p>
 
         <button className="btn btn-yes ending-restart" onClick={onRestart}>
           Restart

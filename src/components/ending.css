@@ -16,14 +16,12 @@
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
 }
 
-.ending-msg {
-  font-size: clamp(2rem, 8vw, 3rem);
-  font-weight: 800;
-}
-
-.ending-sub {
-  opacity: 0.85;
+.ending-credit {
   font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  opacity: 0.8;
 }
 
 .ending-restart {

@@ -2,10 +2,10 @@ import { useCallback, useRef, useState } from "react";
 import IntroScreen from "./components/IntroScreen.jsx";
 import LyricsScreen from "./components/LyricsScreen.jsx";
 import EndingScreen from "./components/EndingScreen.jsx";
-import { SONG_START } from "./config/lyrics.js";
+import { SONG_START, SONG_END } from "./config/lyrics.js";
 import audioUrl from "./assets/audio/por-que.mp3";
 
-// Start the song at the first "Por que" chorus (skip the intro + Verse 1).
+// Play only the chorus->end slice of the song.
 const START_AT = SONG_START;
 
 // Screen state machine (section 2). Single source of truth.
@@ -31,6 +31,16 @@ export default function App() {
   // playing -> audio "ended" -> ending
   const handleEnded = useCallback(() => setScreen("ending"), []);
 
+  // We stop early at SONG_END (the slice end) instead of the real file end,
+  // so transition to the ending screen as soon as currentTime passes it.
+  const handleTimeUpdate = useCallback(() => {
+    const a = audioRef.current;
+    if (a && a.currentTime >= SONG_END) {
+      a.pause();
+      handleEnded();
+    }
+  }, [handleEnded]);
+
   // ending -> Restart -> reset audio -> intro
   const handleRestart = useCallback(() => {
     const a = audioRef.current;
@@ -49,6 +59,7 @@ export default function App() {
         ref={audioRef}
         src={audioUrl}
         preload="auto"
+        onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
       />
 

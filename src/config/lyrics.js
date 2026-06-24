@@ -84,11 +84,15 @@ function buildLyrics(raw) {
   }));
 }
 
-export const lyrics = buildLyrics(RAW);
+// The site plays only this slice of the song (true-audio seconds):
+//   [02:24.33] second "Por que" chorus  ->  [04:42.14] after the final line.
+const SLICE_START = 144.33; // [02:24.33]
+const SLICE_END = 282.14; //   [04:42.14]
 
-// Audio seek point for "start at the chorus" — uses the RAW (true-audio)
-// timestamp, NOT the display OFFSET, so the chorus vocal isn't clipped.
-const firstChorusRaw = RAW.find(([text]) => /^por\s*que/i.test(text));
-export const SONG_START = firstChorusRaw
-  ? Math.max(0, firstChorusRaw[1] - 0.4)
-  : 0;
+const sliced = RAW.filter(([, start]) => start >= SLICE_START - 0.01 && start < SLICE_END);
+export const lyrics = buildLyrics(sliced);
+
+// Audio seek (start) + stop (end) points — RAW/true-audio seconds, NO display
+// OFFSET, so the chorus vocal isn't clipped and we stop right after the song.
+export const SONG_START = Math.max(0, SLICE_START - 0.4);
+export const SONG_END = SLICE_END;
