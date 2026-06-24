@@ -70,14 +70,25 @@ const RAW = [
   ["Na mabura na sa isip ko", 275.67, 282.14], // ends; outro instrumental
 ];
 
+// Global timing nudge in seconds. Positive = lyrics appear LATER.
+// Tweak this one number to shift the whole song's sync.
+const OFFSET = 1;
+
 // Auto-fill each line's end with the next line's start, unless an explicit
-// end was provided as the 3rd RAW value.
+// end was provided as the 3rd RAW value. OFFSET is applied to everything.
 function buildLyrics(raw) {
   return raw.map(([text, start, end], i) => ({
     text,
-    start,
-    end: end != null ? end : i < raw.length - 1 ? raw[i + 1][1] : start + 5,
+    start: start + OFFSET,
+    end: (end != null ? end : i < raw.length - 1 ? raw[i + 1][1] : start + 5) + OFFSET,
   }));
 }
 
 export const lyrics = buildLyrics(RAW);
+
+// Audio seek point for "start at the chorus" — uses the RAW (true-audio)
+// timestamp, NOT the display OFFSET, so the chorus vocal isn't clipped.
+const firstChorusRaw = RAW.find(([text]) => /^por\s*que/i.test(text));
+export const SONG_START = firstChorusRaw
+  ? Math.max(0, firstChorusRaw[1] - 0.4)
+  : 0;
